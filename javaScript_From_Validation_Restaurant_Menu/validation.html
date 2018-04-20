@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+ <head>
+     <title>Registration From</title>
+	 <script type="text/javascript">
+	       function check_info(){
+			  var username = document.getElementById('username').value;
+			  var password = document.getElementById('password').value;
+			  var fname = document.getElementById('fname').value;
+			  var address = document.getElementById('address').value;
+			  var Country = document.getElementById('Country');
+			  var SelectedCountry =Country.options[Country.selectedIndex].value;
+			  var zip = document.getElementById('zip').value;
+			  var email = document.getElementById('email').value;
+			  var message = document.getElementById('message').value;
+			  var male = document.getElementById('male').checked;
+			  var female = document.getElementById('female').checked;
+			  var eng = document.getElementById('eng').checked;
+			  var noneng = document.getElementById('noneng').checked;
+			  
+			 
+			  if(username=="" || password==""|| fname=="" || address=="" || SelectedCountry =="select" || zip=="" || email=="" || message=="" ){
+				  alert("All fields should be filled. Either one or many fields are empty.");
+				  return false;
+			  }	
+			  else{
+				  return true;
+			  }
+          }	
+		  		         
+    </script>	
+ </head>
+ <body>
+  <?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "login";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if(isset($_POST['submit'])) {
+	$user = $_POST['username'];
+	$pass = $_POST['password'];	
+	
+    $result=mysqli_query($conn,"SELECT * FROM registration_info WHERE user_name='$user' and password=md5('$pass')");
+	 $count=mysqli_num_rows($result);
+				 if($count==1){  
+					 echo "This User Name & Password already Used. Try Again.";
+				 }
+				else { 
+				 mysqli_query($conn,"INSERT INTO registration_info(user_name,password,email) VALUES('$user', md5('$pass')")
+				or die("Could not execute the insert query.");				
+			    echo "Registration successfully done. Click Home for login Now";							  
+				}
+}
+
+else{
+?>	
+ 
+              <a href="index.php"><span>Home</span></a> <br />
+     <form action="" method="post" onsubmit="return check_info();">
+      <h1 align="center">Registration From</h1>
+	  <p align="center"><b>Use tab keys to move from one input field to the next.</b></p>
+	   <table align="center" bgcolor="#CCCCCC">
+	      <tr>
+		      <td>Username:</td>
+			  <td><input type="text" name="username" id="username" placeholder="Enter User Name"></td>
+		  </tr>
+		   <tr>
+		      <td>Password:</td>
+			  <td><input type="password" name="password" id="password" placeholder="Enter User Password"></td>
+		  </tr>	
+          <tr>
+		      <td>Full Name:</td>
+			  <td><input type="text" name="fname" id="fname" placeholder="Enter User Name"></td>
+		  </tr>
+		  <tr>
+		      <td>Address:</td>
+			  <td><input type="text" name="address" id="address" placeholder="Enter User Address"></td>
+		  </tr>
+		  <tr>
+		      <td>Country:</td>
+			  <td><select name="Country" id="Country">
+				  <option value="select">(Please select a country)</option>
+				  <option value="bd">Bangladesh</option>
+				  <option value="india">India</option>
+				  <option value="usa">USA</option>
+				  <option value="uk">UK</option>
+				  <option value="canada">Canada</option>
+				</select></td>
+		  </tr>
+		  <tr>
+		      <td>ZIP Code:</td>
+			  <td><input type="text" name="zip" id="zip" placeholder="Enter User ZIP Code"></td>
+		  </tr>
+		  <tr>
+		      <td>Email:</td>
+			  <td><input type="text" name="email" id="email" placeholder="Enter User Email"></td>
+		  </tr>
+		   <tr>
+		      <td>Sex:</td>
+			  <td><input type="radio" name="gender" value="male" id="male" checked> Male
+                  <input type="radio" name="gender" value="female" id="female"> Female<br></td>
+		  </tr>
+		  <tr>
+		      <td>Language:</td>
+			  <td><input type="checkbox" name="eng" value="eng" id="eng" checked>English
+                  <input type="checkbox" name="noneng" value="noneng" id="noneng">Non English</td>
+		  </tr>
+		  <tr>
+		      <td>About:</td>
+			  <td><textarea name="message" rows="10" cols="30" id="message">
+				  </textarea></td>
+		  </tr>		  		  
+		   <tr>
+		      <td></td>
+			  <td><input type="submit" name="submit"/></td>
+			  <td></td>		  
+		  </tr>	
+	   </table>
+	 </form>
+</body>
+</html>
